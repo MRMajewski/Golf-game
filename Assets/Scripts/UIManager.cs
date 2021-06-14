@@ -12,7 +12,13 @@ public class UIManager : MonoBehaviour
     GameObject gameOverPanel;
 
     [SerializeField]
+    TextMeshProUGUI points;
+
+    [SerializeField]
     TextMeshProUGUI scoreText;
+
+    [SerializeField]
+    TextMeshProUGUI highScoreText;
 
     // Start is called before the first frame update
     void Start()
@@ -25,14 +31,29 @@ public class UIManager : MonoBehaviour
     {
         
     }
+    public void CloseGameOverScreen()
+    {
+        gameOverPanel.SetActive(false);
+    }
 
     public void OpenGameOverScreen()
     {
         gameOverPanel.SetActive(true);
     }
 
-    void UpdatePoints()
+    public void UpdatePoints()
     {
-        scoreText.text = manager.GetPoints().ToString();
+        points.text = manager.GetPoints().ToString();
+    }
+
+    public void UpdateScore()
+    {
+        scoreText.text = "SCORE: " + manager.GetPoints().ToString();
+    }
+
+
+    public void UpdateHighScore()
+    {
+        highScoreText.text = "BEST: "+ manager.GetHighScore().ToString();
     }
 }

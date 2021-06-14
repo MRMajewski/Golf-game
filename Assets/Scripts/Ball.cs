@@ -4,16 +4,37 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    Hole hole;
+
+    [SerializeField]
+    Vector2 startingPosition;
+
+    private Rigidbody2D ball;
+
+     private void Start()
+    {
+        ball = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartPosition()
+    { 
+        transform.position = startingPosition;
+        ball.velocity = new Vector2(0, 0);
+        ball.angularVelocity = 0f;
+    }
+
+
+    public bool isBallOutOfBounds()
     {
-        
+        if (transform.position.x > hole.transform.position.x)
+            return true;
+        else  return false;
     }
 
 }
