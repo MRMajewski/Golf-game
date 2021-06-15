@@ -6,31 +6,26 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
-    public GameManager manager;
+    [SerializeField]
+    private GameManager manager;
 
     [SerializeField]
-    GameObject gameOverPanel;
+    private GameObject gameOverPanel;
 
     [SerializeField]
-    TextMeshProUGUI points;
+    private TextMeshProUGUI points;
 
     [SerializeField]
-    TextMeshProUGUI scoreText;
+    private TextMeshProUGUI scoreText;
 
     [SerializeField]
-    TextMeshProUGUI highScoreText;
+    private TextMeshProUGUI highScoreText;
 
-    // Start is called before the first frame update
     void Start()
     {
         gameOverPanel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void CloseGameOverScreen()
     {
         gameOverPanel.SetActive(false);
@@ -50,7 +45,6 @@ public class UIManager : MonoBehaviour
     {
         scoreText.text = "SCORE: " + manager.GetPoints().ToString();
     }
-
 
     public void UpdateHighScore()
     {

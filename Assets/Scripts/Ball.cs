@@ -5,21 +5,16 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField]
-    Hole hole;
+    private Hole hole;
 
     [SerializeField]
-    Vector2 startingPosition;
+    private Vector2 startingPosition;
 
     private Rigidbody2D ball;
 
      private void Start()
     {
         ball = GetComponent<Rigidbody2D>();
-    }
-
-    private void Update()
-    {
-        
     }
 
     public void StartPosition()

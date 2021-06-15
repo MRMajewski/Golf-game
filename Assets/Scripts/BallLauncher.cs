@@ -4,125 +4,106 @@ using UnityEngine;
 
 public class BallLauncher : MonoBehaviour
 {
-    Vector3 direction;
-    public float angle;
+    private Vector3 direction;
+
+    private float angle;
+
+    private float force;
+
+    private float forceFactor;
+
+    private float maximumForce;
 
     [SerializeField]
-    float force;
-
-  
+    private Rigidbody2D ball;
 
     [SerializeField]
-    Rigidbody2D ball;
+    private GameObject pointPrefab;
 
-    public GameObject pointPrefab;
+    private GameObject[] points;
 
-    public GameObject[] points;
+    private int numberOfPoints;
 
-    public List<GameObject> pointsList;
+    [SerializeField]
+    private Vector2 trajectoryResetPos;
 
-    public int numberOfPoints;
+    [SerializeField]
+    private Transform trajectoryParent;
 
-    float timeForTrajectoryDot;
-
-    public float forceFactor;
-
-    public float trajectoryParameter;
-
-    public float trajectoryDotRespawnTime;
+    [SerializeField]
+    private GameManager manager;
 
     public bool wasLaunch = false;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        timeForTrajectoryDot = 0;
-           direction = Quaternion.Euler(0, 0, angle) * Vector3.right;
-    
-        pointsList = new List<GameObject>();
-
-        //for (int i = 0; i < numberOfPoints; i++)
-        //{
-        //    points[i] = Instantiate(pointPrefab, transform.position, Quaternion.identity);
-        //}
-
-        //for (int i = 0; i < pointsList.Count; i++)
-        //{
-        //    pointsList[i] = Instantiate(pointPrefab, transform.position, Quaternion.identity);
-        //}
+        forceFactor = 5f;
+        maximumForce = 13f;
+        angle = 45f;
+        direction = Quaternion.Euler(0, 0, angle) * Vector3.right;
+        CreateTrajectory();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!wasLaunch)
         {
             if (Input.GetButton("Space"))
-            {
-                force += Time.deltaTime * forceFactor;
-
-                timeForTrajectoryDot += Time.deltaTime * trajectoryParameter;
-
-                if (timeForTrajectoryDot >= trajectoryDotRespawnTime && pointsList.Count < 21)
-                {
-                    {
-                        pointsList.Add(Instantiate(pointPrefab, transform.position, Quaternion.identity, transform.parent));
-                    }
-
-                    for (int i = 0; i < pointsList.Count; i++)
-                    {
-
-                        pointsList[i].transform.position = SetPointPosition(i * 0.1f);
-
-                        if (pointsList.Count > 20)
-                        {
-                            Destroy(pointsList[i]);
-                            pointsList.Remove(pointsList[i]);
-                        }
-
-                    }
-                    timeForTrajectoryDot = 0;
-                }
-
-                //for (int i = 0; i < points.Length; i++)
-                //{
-                //    points[i].transform.position = SetPointPosition(i * 0.1f);
-                //}
+            {            
+                UpdateTrajectory();
             }
-            if (Input.GetButtonUp("Space") || force > 13f)
+            if (Input.GetButtonUp("Space") || force > maximumForce)
             {
                 LaunchBall();
-
             }
         }
+    }
+
+    void CreateTrajectory()
+    {
+        numberOfPoints = 20;
+
+        points = new GameObject[numberOfPoints];
+
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            points[i] = Instantiate(pointPrefab, transform.position, Quaternion.identity, trajectoryParent);
+        }
+    }
+
+    void UpdateTrajectory()
+    {
+        force += Time.deltaTime * forceFactor * manager.difficultyFactor;
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            points[i].transform.position = SetPointPosition(i * 0.1f);
+        }
+    }
+
+    Vector2 SetPointPosition(float t)
+    {
+        Vector2 currentPointPos = (Vector2)transform.position
+            + ((Vector2)direction.normalized * force * t)
+            + 0.5f * Physics2D.gravity * (t * t);
+
+        return currentPointPos;
     }
 
     void LaunchBall()
     {
 
         ball.velocity = direction * force;
-        ResetTrayectory();
+        ResetTrajectory();
         wasLaunch = true;
     }
 
-    void ResetTrayectory()
+    void ResetTrajectory()
     {
-        foreach (GameObject point in pointsList)
+        foreach (GameObject point in points)
         {
-            Destroy(point);
+            point.transform.position = trajectoryResetPos;
         }
-        pointsList.Clear();
-
         force = 0;
-    }
-
-
-    Vector2 SetPointPosition(float t)
-    {
-        Vector2 currentPointPos = (Vector2) transform.position + ((Vector2)direction.normalized * force * t) 
-        + 0.5f * Physics2D.gravity * (t * t);
-
-        return currentPointPos;
     }
 }

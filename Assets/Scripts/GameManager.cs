@@ -4,26 +4,35 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public UIManager uiManager;
-    public Hole hole;
-    public Ball ball;
-    // public BallLauncher launcher;
-    public BallLauncherTest launcher;
+    [SerializeField]
+    private UIManager uiManager;
 
-    public float shotSpeed = 1;
+    [SerializeField]
+    private Hole hole;
+    
+    [SerializeField]
+    private Ball ball;
+
+    [SerializeField]
+    private Rigidbody2D ballRigidbody;
+
+    [SerializeField]
+    private BallLauncher launcher;
+
     [SerializeField]
     private int points;
+
     [SerializeField]
     private int highScore;
 
-    public float difficultyFactor = 1;
+    public float difficultyFactor;
 
     // Start is called before the first frame update
     void Start()
     {
+        difficultyFactor = 1;
         points = 0;
-        highScore = 0;
-        PlayerPrefs.SetInt("HighScore", highScore);
+        highScore = 0;        
     }
 
     // Update is called once per frame
@@ -33,16 +42,22 @@ public class GameManager : MonoBehaviour
         {
             StartLevel();
         }
+
         if(launcher.wasLaunch)
         {
-            if (ball.isBallOutOfBounds())
+            if (ball.isBallOutOfBounds() || ballRigidbody.velocity.magnitude <= 0f)
             {
                 GameOver();
             }
-        }      
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ExitGame();
+        }
     }
 
-    public void StartLevel()
+    private void StartLevel()
     {
         difficultyFactor = 1;
         points = 0;
@@ -50,7 +65,16 @@ public class GameManager : MonoBehaviour
         NextLevel();
     }
 
-    public void GameOver()
+    private void NextLevel()
+    {
+
+        ball.StartPosition();
+        hole.SetRandomPos();
+        launcher.wasLaunch = false;
+        uiManager.CloseGameOverScreen();
+    }
+
+    private void GameOver()
     {
         uiManager.UpdateScore();
         uiManager.UpdateHighScore();
@@ -68,16 +92,6 @@ public class GameManager : MonoBehaviour
         uiManager.UpdatePoints();
         NextLevel();
         difficultyFactor += 0.25f;
-
-    }
-
-    public void NextLevel()
-    {
-
-        ball.StartPosition();
-        hole.SetRandomPos();
-        launcher.wasLaunch = false;
-        uiManager.CloseGameOverScreen();
     }
 
     public int GetPoints()
@@ -88,5 +102,10 @@ public class GameManager : MonoBehaviour
     public int GetHighScore()
     {
         return highScore;
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
