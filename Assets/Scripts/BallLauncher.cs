@@ -43,11 +43,11 @@ public class BallLauncher : MonoBehaviour
     {
         if (!wasLaunch)
         {
-            if (Input.GetButton("Space"))
+            if (Input.GetKey(KeyCode.Space))
             {            
                 UpdateTrajectory();
             }
-            if (Input.GetButtonUp("Space") || force > maximumForce)
+            if (Input.GetKeyUp(KeyCode.Space) || force > maximumForce)
             {
                 LaunchBall();
             }
