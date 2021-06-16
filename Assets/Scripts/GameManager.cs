@@ -6,23 +6,16 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private UIManager uiManager;
-
     [SerializeField]
-    private Hole hole;
-    
+    private Hole hole;   
     [SerializeField]
     private Ball ball;
-
     [SerializeField]
     private Rigidbody2D ballRigidbody;
-
     [SerializeField]
     private BallLauncher launcher;
 
-    [SerializeField]
     private int points;
-
-    [SerializeField]
     private int highScore;
 
     public float difficultyFactor;
@@ -30,8 +23,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        difficultyFactor = 1;
-        points = 0;
+        ResetScore();
         highScore = 0;        
     }
 
@@ -59,8 +51,7 @@ public class GameManager : MonoBehaviour
 
     private void StartLevel()
     {
-        difficultyFactor = 1;
-        points = 0;
+        ResetScore();
         uiManager.UpdatePoints();
         NextLevel();
     }
@@ -92,6 +83,12 @@ public class GameManager : MonoBehaviour
         uiManager.UpdatePoints();
         NextLevel();
         difficultyFactor += 0.25f;
+    }
+
+    private void ResetScore()
+    {
+        difficultyFactor = 1;
+        points = 0;
     }
 
     public int GetPoints()

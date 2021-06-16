@@ -5,41 +5,36 @@ using UnityEngine;
 public class BallLauncher : MonoBehaviour
 {
     private Vector3 direction;
-
-    private float angle;
-
     private float force;
-
-    private float forceFactor;
-
-    private float maximumForce;
+    private GameObject[] points;
 
     [SerializeField]
     private Rigidbody2D ball;
-
     [SerializeField]
     private GameObject pointPrefab;
-
-    private GameObject[] points;
-
-    private int numberOfPoints;
-
-    [SerializeField]
-    private Vector2 trajectoryResetPos;
-
     [SerializeField]
     private Transform trajectoryParent;
-
     [SerializeField]
     private GameManager manager;
 
     public bool wasLaunch = false;
 
+    [Header("Changeable factors")]
+
+    [SerializeField]
+    private float angle;
+    [SerializeField]
+    private int numberOfPoints;
+    [SerializeField]
+    private float forceFactor;
+    [SerializeField]
+    private float maximumForce;
+    [SerializeField]
+    private Vector2 trajectoryResetPos;
+
+
     void Start()
     {
-        forceFactor = 5f;
-        maximumForce = 13f;
-        angle = 45f;
         direction = Quaternion.Euler(0, 0, angle) * Vector3.right;
         CreateTrajectory();
     }
@@ -61,8 +56,6 @@ public class BallLauncher : MonoBehaviour
 
     void CreateTrajectory()
     {
-        numberOfPoints = 20;
-
         points = new GameObject[numberOfPoints];
 
         for (int i = 0; i < numberOfPoints; i++)
