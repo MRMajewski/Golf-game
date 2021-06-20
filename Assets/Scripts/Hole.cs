@@ -10,17 +10,45 @@ public class Hole : MonoBehaviour
     private Ball ball;
 
     [SerializeField]
-    private float spawnRangeX;
+    private PositionConverter converter;
+
+    [SerializeField]
+    private float spawnRangeXMax;
+    [SerializeField]
+    private float spawnRangeXMin;
+
+    private float PropX;
+    private float PropY;
+
+    public bool isBallInHole = false;
+
+
 
     public void SetRandomPos()
     {
-        Vector3 newSpawnPos = new Vector3(Random.Range(0, spawnRangeX), transform.position.y, transform.position.z);
-        transform.position = newSpawnPos;
+
+        Vector2 newSpawnPos = new Vector2(Random.Range(spawnRangeXMin, spawnRangeXMax), transform.position.y);
+
+        MeasureProportion(newSpawnPos);
+
+        transform.position = converter.ConvertToScreenPosition(PropX, PropY);
+
+        isBallInHole = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void MeasureProportion(Vector2 newSpawnPos)
     {
-       manager.Win();
+        PropX = converter.SetProportionX(newSpawnPos);
+        PropY = converter.SetProportionY(newSpawnPos);
     }
+
+
+        private void OnTriggerEnter2D(Collider2D collision)
+    {
+       isBallInHole = true;
+    }
+
+   
+
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Ball : MonoBehaviour
 {
     [SerializeField]
@@ -10,20 +11,35 @@ public class Ball : MonoBehaviour
     [SerializeField]
     private Vector2 startingPosition;
 
+    [SerializeField]
+    private float startingPositionX;
+
+    [SerializeField]
     private Rigidbody2D ball;
 
-     private void Start()
+    public PositionConverter converter;
+
+    private float ProportionX;
+    private float ProportionY;
+
+    private void Start()
     {
-        ball = GetComponent<Rigidbody2D>();
+        MeasureProportion();          
+    }
+
+    private void MeasureProportion()
+    {
+        startingPosition = new Vector2(startingPositionX, transform.position.y);
+        ProportionX = converter.SetProportionX(startingPosition);
+        ProportionY = converter.SetProportionY(startingPosition);
     }
 
     public void StartPosition()
-    { 
-        transform.position = startingPosition;
+    {
+        transform.position = converter.ConvertToScreenPosition(ProportionX, ProportionY);   
         ball.velocity = new Vector2(0, 0);
         ball.angularVelocity = 0f;
     }
-
 
     public bool isBallOutOfBounds()
     {

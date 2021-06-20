@@ -32,6 +32,11 @@ public class BallLauncher : MonoBehaviour
     [SerializeField]
     private Vector2 trajectoryResetPos;
 
+    [SerializeField]
+    private Vector2 trajectoryResetPosTest;
+
+    public float difficultyFactor;
+
 
     void Start()
     {
@@ -59,14 +64,14 @@ public class BallLauncher : MonoBehaviour
         points = new GameObject[numberOfPoints];
 
         for (int i = 0; i < numberOfPoints; i++)
-        {
-            points[i] = Instantiate(pointPrefab, transform.position, Quaternion.identity, trajectoryParent);
+        {        
+            points[i] = Instantiate(pointPrefab, ball.transform.position, Quaternion.identity, trajectoryParent);
         }
     }
 
     void UpdateTrajectory()
     {
-        force += Time.deltaTime * forceFactor * manager.difficultyFactor;
+        force += Time.deltaTime * forceFactor * difficultyFactor;
 
         for (int i = 0; i < points.Length; i++)
         {
@@ -76,7 +81,7 @@ public class BallLauncher : MonoBehaviour
 
     Vector2 SetPointPosition(float t)
     {
-        Vector2 currentPointPos = (Vector2)transform.position
+        Vector2 currentPointPos = (Vector2)ball.transform.position
             + ((Vector2)direction.normalized * force * t)
             + 0.5f * Physics2D.gravity * (t * t);
 

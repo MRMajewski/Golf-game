@@ -18,13 +18,12 @@ public class GameManager : MonoBehaviour
     private int points;
     private int highScore;
 
-    public float difficultyFactor;
 
     // Start is called before the first frame update
     void Start()
     {
-        ResetScore();
-        highScore = 0;        
+        highScore = PlayerPrefs.GetInt("HIGHSCORE", highScore);
+        StartLevel();
     }
 
     // Update is called once per frame
@@ -41,6 +40,11 @@ public class GameManager : MonoBehaviour
             {
                 GameOver();
             }
+
+            if(hole.isBallInHole)
+            {
+                Win();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -54,15 +58,17 @@ public class GameManager : MonoBehaviour
         ResetScore();
         uiManager.UpdatePoints();
         NextLevel();
+        Time.timeScale = 1;
     }
 
     private void NextLevel()
     {
 
         ball.StartPosition();
-        hole.SetRandomPos();
+        hole.SetRandomPos();       
         launcher.wasLaunch = false;
         uiManager.CloseGameOverScreen();
+        Time.timeScale = 1;
     }
 
     private void GameOver()
@@ -70,7 +76,8 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateScore();
         uiManager.UpdateHighScore();
         uiManager.OpenGameOverScreen();
-        ball.StartPosition();
+        Time.timeScale = 0;
+
     }
 
     public void Win()
@@ -78,16 +85,17 @@ public class GameManager : MonoBehaviour
         points++;
         if(points>highScore )
         {
-            highScore = points;           
+            highScore = points;
+            PlayerPrefs.SetInt("HIGHSCORE", highScore);
         }
         uiManager.UpdatePoints();
         NextLevel();
-        difficultyFactor += 0.25f;
+        launcher.difficultyFactor += 0.25f;
     }
 
     private void ResetScore()
     {
-        difficultyFactor = 1;
+        launcher.difficultyFactor = 1;
         points = 0;
     }
 
