@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
     private int points;
     private int highScore;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         highScore = PlayerPrefs.GetInt("HIGHSCORE", highScore);

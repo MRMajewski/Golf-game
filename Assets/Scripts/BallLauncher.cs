@@ -18,6 +18,7 @@ public class BallLauncher : MonoBehaviour
     private GameManager manager;
 
     public bool wasLaunch = false;
+    public float difficultyFactor;
 
     [Header("Changeable factors")]
 
@@ -32,14 +33,10 @@ public class BallLauncher : MonoBehaviour
     [SerializeField]
     private Vector2 trajectoryResetPos;
 
-    [SerializeField]
-    private Vector2 trajectoryResetPosTest;
-
-    public float difficultyFactor;
-
 
     void Start()
     {
+        wasLaunch = false;
         direction = Quaternion.Euler(0, 0, angle) * Vector3.right;
         CreateTrajectory();
     }
@@ -49,7 +46,7 @@ public class BallLauncher : MonoBehaviour
         if (!wasLaunch)
         {
             if (Input.GetKey(KeyCode.Space))
-            {            
+            {
                 UpdateTrajectory();
             }
             if (Input.GetKeyUp(KeyCode.Space) || force > maximumForce)
@@ -57,6 +54,7 @@ public class BallLauncher : MonoBehaviour
                 LaunchBall();
             }
         }
+        UpdateLauncherPosition();
     }
 
     void CreateTrajectory()
@@ -64,7 +62,7 @@ public class BallLauncher : MonoBehaviour
         points = new GameObject[numberOfPoints];
 
         for (int i = 0; i < numberOfPoints; i++)
-        {        
+        {
             points[i] = Instantiate(pointPrefab, ball.transform.position, Quaternion.identity, trajectoryParent);
         }
     }
@@ -90,7 +88,6 @@ public class BallLauncher : MonoBehaviour
 
     void LaunchBall()
     {
-
         ball.velocity = direction * force;
         ResetTrajectory();
         wasLaunch = true;
@@ -103,5 +100,10 @@ public class BallLauncher : MonoBehaviour
             point.transform.position = trajectoryResetPos;
         }
         force = 0;
+    }
+
+    void UpdateLauncherPosition()
+    {
+        transform.position = ball.transform.position;
     }
 }

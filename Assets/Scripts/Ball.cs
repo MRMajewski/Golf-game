@@ -6,18 +6,14 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField]
+    private PositionConverter converter;
+    [SerializeField]
     private Hole hole;
-
-    [SerializeField]
-    private Vector2 startingPosition;
-
-    [SerializeField]
-    private float startingPositionX;
-
     [SerializeField]
     private Rigidbody2D ball;
 
-    public PositionConverter converter;
+    [SerializeField]
+    private Vector2 startingPosition;
 
     private float ProportionX;
     private float ProportionY;
@@ -28,8 +24,7 @@ public class Ball : MonoBehaviour
     }
 
     private void MeasureProportion()
-    {
-        startingPosition = new Vector2(startingPositionX, transform.position.y);
+    {   
         ProportionX = converter.SetProportionX(startingPosition);
         ProportionY = converter.SetProportionY(startingPosition);
     }
@@ -37,6 +32,7 @@ public class Ball : MonoBehaviour
     public void StartPosition()
     {
         transform.position = converter.ConvertToScreenPosition(ProportionX, ProportionY);   
+       // transform.position = converter.ConvertToScreenConstant(startingPosition);
         ball.velocity = new Vector2(0, 0);
         ball.angularVelocity = 0f;
     }
@@ -45,7 +41,8 @@ public class Ball : MonoBehaviour
     {
         if (transform.position.x > hole.transform.position.x)
             return true;
-        else  return false;
+        else
+            return false;
     }
 
 }
